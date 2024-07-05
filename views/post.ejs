@@ -1,0 +1,28 @@
+<%- include('./partials/navbar') %>
+<%- include('./layouts/boilerplate') %>
+<head>
+   <title><%= post.title %></title>
+   <link rel="stylesheet" href="/css/post.css">
+</head>
+<body>
+  <div class="container mt-4 content">
+    <h5 class="card-title"><%= post.title %></h5>
+    <div class="content-container">
+      <div class="card-img-box">
+        <img src="/uploads/<%= post.image %>" class="card-img img-fluid" alt="<%= post.title %>">
+      </div>
+      <div class="card-content">
+        <p class="card-text"><%= post.content %></p>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/footer') %>
+</body>
+
+
+
+
+
+
+
