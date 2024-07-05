@@ -52,6 +52,10 @@ app.get('/new', auth, (req, res) => {
   res.render('new');
 });
 
+app.get('/about', auth, (req, res) => {
+  res.render('about');
+});
+
 app.post('/new', auth, upload.single('image'), async (req, res) => {
   try {
     const post = new Post({
