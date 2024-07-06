@@ -6,19 +6,19 @@
     <div class="row">
         <h1 class="text-center mb-4">Create New Post</h1>
         <div class="col-md-6 offset-md-3">
-            <form action="/new" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+            <form id="postForm" action="/new" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" type="text" id="title" name="post[title]" required>
-                    <div class="valid-feedback">
-                        Looks good!
+                    <div class="invalid-feedback">
+                        Please provide a title.
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="content">Content</label>
                     <textarea class="form-control" id="content" name="post[content]" rows="5" required></textarea>
-                    <div class="valid-feedback">
-                        Looks good!
+                    <div class="invalid-feedback">
+                        Please provide content
                     </div>
                 </div>
                 <div class="mb-3">
@@ -29,13 +29,16 @@
                             <span class="form-file-text">Choose image...</span>
                             <span class="form-file-button">Browse</span>
                         </label>
+                        <div class="invalid-feedback">
+                            Please choose an image.
+                      </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="location">Location</label>
                     <input class="form-control" type="text" id="location" name="post[location]" required>
-                    <div class="valid-feedback">
-                        Looks good!
+                    <div class="invalid-feedback">
+                        Please provide a location.
                     </div>
                 </div>
                 <div class="mb-3 text-center">
@@ -51,6 +54,27 @@
         var nextSibling = this.nextElementSibling.querySelector('.form-file-text');
         nextSibling.textContent = fileName;
     });
+//new part added
+(function() {
+    'use strict'
+
+    //fetch all the forms we want to apply custom bootstrap validation styles to
+    var forms = document.querySelectorAll('.validated-form')
+
+    //loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if(!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+        
+        }, false)
+    })
+}) ()
 </script>
 </body>
 <%-include('./partials/footer')%>
