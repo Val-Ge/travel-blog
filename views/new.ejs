@@ -1,4 +1,7 @@
-<%-include('./layouts/boilerplate')%>
+<%- include('./partials/navbar') %>
+<%- include('./layouts/boilerplate') %>
+
+<body>
 <div class="container mt-4">
     <div class="row">
         <h1 class="text-center mb-4">Create New Post</h1>
@@ -36,13 +39,12 @@
                     </div>
                 </div>
                 <div class="mb-3 text-center">
-                    <button type="submit" class="btn btn-success">Add Post</button>
+                    <button type="submit" class="btn btn-primary">Add Post</button>
                 </div>
             </form>
-            <div class="text-center mt-3">
-                <a href="/" class="btn btn-secondary">All Posts</a>
-            </div>
+           
         </div>
     </div>
 </div>
+</body>
 <%-include('./partials/footer')%>

@@ -20,7 +20,8 @@
             <img src="/uploads/<%= post.image %>" class="card-img-top card-img" alt="<%= post.title %>">
             <div class="card-body">
               <h5 class="card-title"><%= post.title %></h5>
-              <p class="card-text"><%= post.content%>...</p>
+              <p class="card-text"><%= post.content.split(' ').slice(0, 12).join(' ') %>...</p>
+              <!-- <p class="card-text"><%= post.content%>...</p> -->
               <a href="/posts/<%= post._id %>" class="btn btn-primary">Read More</a>
             </div>
           </div>
