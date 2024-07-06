@@ -41,10 +41,16 @@
                 <div class="mb-3 text-center">
                     <button type="submit" class="btn btn-primary">Add Post</button>
                 </div>
-            </form>
-           
+            </form>          
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('image').addEventListener('change', function() {
+        var fileName = this.files[0].name;
+        var nextSibling = this.nextElementSibling.querySelector('.form-file-text');
+        nextSibling.textContent = fileName;
+    });
+</script>
 </body>
 <%-include('./partials/footer')%>
