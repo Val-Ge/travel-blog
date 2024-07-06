@@ -8,8 +8,8 @@ const Post = require('./models/post');
 
 const app = express();
 
-// const postRoutes = require('./routes/posts');
-// const blogRoutes = require('./routes/blog');
+const postRoutes = require('./routes/posts');
+const blogRoutes = require('./routes/blog');
 
 // Set up storage for image uploads
 const storage = multer.diskStorage({
