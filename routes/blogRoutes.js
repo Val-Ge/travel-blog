@@ -19,12 +19,12 @@ router.get('/contact', (req, res) => {
     res.render('contact');
   });
 
-//dashboard
-router.get('/dashboard', ensureAuthenticated, (req, res) => 
-  res.render('/dashboard', {
-    user:req.user
-  })
-);
+// //dashboard
+// router.get('/dashboard', ensureAuthenticated, (req, res) => {
+//   res.render('/dashboard', {
+//     user:req.user
+//   });
+// });
 
 //new post - admin only
 router.get('/new', ensureAuthenticated, ensureAdmin, (req, res) => 

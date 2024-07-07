@@ -4,8 +4,8 @@
     <div class="row">
         <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
             <div class="card shadow">
-                <img src="https://unsplash.com/photos/people-walking-beside-berlitz-building-during-daytime-x5icsOgc7Lw"
-                alt="" class="card-img-top" />
+                <!-- <img src="https://unsplash.com/photos/people-walking-beside-berlitz-building-during-daytime-x5icsOgc7Lw"
+                alt="" class="card-img-top" /> -->
                <div class="card-body">
                 <h5 class="card-title">Login</h5>
                 <form action="/login" method="POST" class="validated-form" novalidate>
@@ -37,4 +37,25 @@
         </div>
     </div>
 </div>
-
+<script>
+    (function () {
+        'use strict';
+    
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.validated-form');
+    
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+    </script>
+    

@@ -13,6 +13,6 @@ module.exports={
             return next();
         }
         req.flash('error_msg', 'you are not authorized to view that source');
-        res.redirect('/dashboard');
+        res.redirect('/new');
     }
 };
