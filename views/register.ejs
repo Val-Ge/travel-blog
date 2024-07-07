@@ -1,0 +1,56 @@
+<%- include('./partials/navbar') %>
+<%- include('./layouts/boilerplate') %>
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+            <div class="card shadow">
+                <img src="https://unsplash.com/photos/people-walking-beside-berlitz-building-during-daytime-x5icsOgc7Lw"
+                alt="" class="card-img-top" />
+               <div class="card-body">
+                <h5 class="card-title">Register</h5>
+                <form action="/users/register" method="POST" class="validated-form" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Name</label>
+                        <input class="form-control" type="text" id="name" name="name" autofocus required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Email</label>
+                        <input class="form-control" type="email" id="email" name="email" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Password</label>
+                        <input class="form-control" type="password" id="password" name="password" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="password2">Confirm Password</label>
+                        <input class="form-control" type="password" id="password2" name="password2" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="role">Role</label>
+                        <select class="form-select" id="role" name="role" required>
+                            <option value="user" selected>User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-block">Register</button>
+                </form>
+               </div>
+            </div>
+        </div>
+    </div>
+</div>

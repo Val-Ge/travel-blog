@@ -50,31 +50,34 @@
 </div>
 <script>
     document.getElementById('image').addEventListener('change', function() {
-        var fileName = this.files[0].name;
+        var fileName = this.files[0]?.name || 'Choose image...';
         var nextSibling = this.nextElementSibling.querySelector('.form-file-text');
         nextSibling.textContent = fileName;
     });
-//new part added
-(function() {
-    'use strict'
-
-    //fetch all the forms we want to apply custom bootstrap validation styles to
-    var forms = document.querySelectorAll('.validated-form')
-
-    //loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if(!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-
-            form.classList.add('was-validated')
-        
-        }, false)
-    })
-}) ()
 </script>
+// public/js/validateForms.js
+<script>
+(function () {
+    'use strict';
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.validated-form');
+
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        });
+})();
+</script>
+
 </body>
+
 <%-include('./partials/footer')%>

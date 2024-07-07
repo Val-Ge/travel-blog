@@ -1,0 +1,10 @@
+<%- include('./partials/navbar') %>
+<%- include('./layouts/boilerplate') %>
+
+<h1>Welcome<%= user.name %></h1>
+<p>Your role: <%= user.role %></p>
+<%if (user.role: === 'admin') {%>
+    <a href="/new">New Post</a>
+<% } %>
+
+<%- include('./partials/footer') %>

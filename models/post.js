@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const multer = require('multer');
 
-
   
   // Models
   const postSchema = new Schema({
