@@ -1,0 +1,29 @@
+<%- include('./partials/navbar') %>
+<%- include('./layouts/boilerplate') %>
+<head>
+   <title>Edit Post - <%= post.title %></title>
+   <link rel="stylesheet" href="/css/post.css">
+</head>
+<body>
+  <div class="container mt-4 content">
+    <h5 class="card-title">Edit Post</h5>
+    <form action="/posts/<%= post._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" class="form-control" id="title" name="post[title]" value="<%= post.title %>" required>
+      </div>
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea class="form-control" id="content" name="post[content]" rows="5" required><%= post.content %></textarea>
+      </div>
+      <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" name="post[location]" value="<%= post.location %>" required>
+      </div>
+      <!-- Add other fields as needed, such as image upload -->
+      <button type="submit" class="btn btn-primary">Update Post</button>
+    </form>
+  </div>
+
+  <%- include('./partials/footer') %>
+</body>

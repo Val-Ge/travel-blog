@@ -9,6 +9,7 @@ const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 const nodemailer = require('nodemailer')
+const methodOverride = require('method-override');
 
 // Load route files
 const postRoutes = require('./routes/postRoutes');
@@ -32,6 +33,7 @@ app.set('view engine', 'ejs');
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // In case you're sending JSON
+app.use(methodOverride('_method'));
 
 // Express session
 app.use(session({

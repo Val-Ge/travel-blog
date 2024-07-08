@@ -2,18 +2,10 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const mongoose = require('mongoose');
-const Post = require('../models/post'); // Adjust the path as necessary
+const Message = require('../models/message'); 
+const Post = require('../models/post'); 
 const { ensureAuthenticated, ensureAdmin } = require('../config/auth');
 
-// Define the Message schema and model
-const messageSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    message: { type: String, required: true },
-    date: { type: Date, default: Date.now }
-});
-
-const Message = mongoose.model('Message', messageSchema);
 
 // Routes
 router.get('/', async (req, res) => {

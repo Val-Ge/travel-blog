@@ -8,4 +8,5 @@ const messageSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now }
 });
 
-const Message = mongoose.model('Message', messageSchema);
+// const Message = mongoose.model('Message', messageSchema);
+module.exports = mongoose.model("Message", messageSchema)

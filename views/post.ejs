@@ -13,6 +13,17 @@
       </div>
       <div class="card-content">
         <p class="card-text"><%= post.content %></p>
+        
+        <% if (admin) { %>
+          <!-- Edit Button -->
+          <a href="/posts/<%= post._id %>/edit" class="btn btn-primary">Edit</a>
+
+          <!-- Delete Button -->
+          <form action="/posts/<%= post._id %>?_method=DELETE" method="POST" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Delete</button>
+          </form>
+        <% } %>
+        
       </div>
     </div>
   </div>
