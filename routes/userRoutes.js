@@ -4,6 +4,7 @@ const User = require('../models/User'); // Adjust the path as necessary
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const { ensureAuthenticated, ensureAdmin } = require('../config/auth');
+const flash = require('connect-flash');
 
 // Login Page
 router.get('/login', (req, res) => res.render('login'));
@@ -38,15 +39,10 @@ router.post('/register', (req, res) => {
     } else {
         User.findOne({ email: email }).then(user => {
             if (user) {
-                errors.push({ msg: 'Email already exists.' });
-                res.render('register', {
-                    errors,
-                    name,
-                    email,
-                    password,
-                    password2,
-                    role
-                });
+               // User already exists, set error message and redirect
+               req.flash('error_msg', 'Email already exists.');
+               res.redirect('/register');
+             
             } else {
                 const newUser = new User({
                     name,
@@ -62,9 +58,10 @@ router.post('/register', (req, res) => {
                         newUser
                             .save()
                             .then(user => {
+                                
                                 req.flash('success_msg', 'You are now registered and can log in');
                                 res.redirect('/login'); // '/users/login'
-                            })
+                    }) 
                             .catch(err => console.log(err));
                     });
                 });
@@ -85,7 +82,10 @@ router.post('/register', (req, res) => {
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
       if (err) return next(err);
-      if (!user) return res.redirect('/login');
+      if (!user) {
+        req.flash('error_msg', 'Invalid credentials'); // Set error message
+        return res.redirect('/login');
+    }
   
       req.logIn(user, (err) => {
         if (err) return next(err);
@@ -99,15 +99,20 @@ router.post('/login', (req, res, next) => {
   });
  
   
-// Logout handler
+
 router.get('/logout', (req, res, next) => {
-    req.logout(function(err) {
-        if (err) {return next(err); }
-    
-    req.flash('success_msg', 'You are logged out.');
-    res.redirect('/login'); // '/users/login'
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success_msg', 'You are logged out.');
+        res.redirect('/login');
+    });
 });
-});
+
+
+
+
 
 module.exports = router;
 

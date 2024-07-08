@@ -8,6 +8,16 @@
                 alt="" class="card-img-top" /> -->
                <div class="card-body">
                 <h5 class="card-title">Register</h5>
+                <% if (error_msg && error_msg.length > 0) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <%= error_msg %>
+                    </div>
+                <% } %>
+                <% if (success_msg && success_msg.length > 0) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= success_msg %>
+                    </div>
+                <% } %>
                 <form action="/register" method="POST" class="validated-form" novalidate>
                     <div class="mb-3">
                         <label class="form-label" for="name">Name</label>
@@ -37,16 +47,6 @@
                             Looks good!
                         </div>
                     </div>
-                    <!-- <div class="mb-3">
-                        <label class="form-label" for="role">Role</label>
-                        <select class="form-select" id="role" name="role" required>
-                            <option value="user" selected>User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                        <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                    </div> -->
                     <button class="btn btn-success btn-block">Register</button>
                 </form>
                </div>

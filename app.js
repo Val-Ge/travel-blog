@@ -8,7 +8,7 @@ const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
-
+const nodemailer = require('nodemailer')
 
 // Load route files
 const postRoutes = require('./routes/postRoutes');
