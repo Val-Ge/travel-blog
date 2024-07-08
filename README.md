@@ -1,6 +1,8 @@
 # Web Blog Project
 
-This is a web blog application where users can view posts about places I have visited. Each post contains an image and a brief description. Users can click on a post to read the full content. The blog also has an about page, a contact form, and a feature to create new posts.
+This is a web blog application where users can view posts about places I have visited.
+Each post contains an image and a brief description. Users can click on a post to read the full content. 
+
 
 ## Table of Contents
 - [Features](#features)
@@ -15,9 +17,15 @@ This is a web blog application where users can view posts about places I have vi
 - Home page with cards displaying images and short descriptions of posts
 - Detailed view of posts
 - About page with an image and description
-- Contact page with a form validated using Bootstrap
+- Contact page with a form validated using Bootstrap and email functionality
+- User authentication (login and registration)
+- Conditional navigation links based on user authentication status
+  - Logged in users see a logout button instead of login and register buttons
+  - Admin users see a "New Post" link to create new posts
 - Ability to create new posts with image upload
 - Navigation bar and footer using Bootstrap partials
+
+---
 
 ## Technologies Used
 - Node.js
@@ -25,13 +33,20 @@ This is a web blog application where users can view posts about places I have vi
 - MongoDB with Mongoose
 - Bootstrap for styling and form validation
 - Multer for image uploads
+- Nodemailer for email functionality
+
+---
 
 ## Setup and Installation
 
+#### Install Dependencies
+```bash
+npm install
+
 1. **Clone the repository**
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
-    cd your-repo-name
+    git clone https://github.com/Val-Ge/travel-blog
+    cd travel-blog
     ```
 
 2. **Install dependencies**
@@ -41,14 +56,16 @@ This is a web blog application where users can view posts about places I have vi
 
 3. **Set up MongoDB**
     - Make sure you have MongoDB installed and running on your machine.
-    - You can use a local instance or a MongoDB Atlas cloud instance.
-
+    
 4. **Configure environment variables**
     - Create a `.env` file in the root directory.
     - Add the following environment variables:
-        ```plaintext
-        DATABASE_URL=your-mongodb-connection-string
-        ```
+      DATABASE_URL=your-mongodb-connection-string
+    EMAIL_USER=your-email@gmail.com
+    EMAIL_PASS=your-email-password-or-app-password
+    RECIPIENT_EMAIL=recipient@example.com
+    SESSION_SECRET=your-session-secret
+
 
 5. **Run seed data**
     ```bash
@@ -65,27 +82,48 @@ This is a web blog application where users can view posts about places I have vi
 
 - **Home Page:** Displays posts with images and short descriptions.
 - **Post Page:** Click on any post on the home page to view the full content.
-- **About Page:** Contains an image and description about the blog.
+- **About Page:** Contains an image and description about the blog and author.
 - **Contact Page:** Users can fill out a contact form which is validated using Bootstrap.
-- **Create New Post:** Click on the "New Post" link to create a new blog post and upload an image.
+    Upon submission, the form sends an email with the user's message.
+- **User Authentication:** Users can register and log in.
+    Logged in users will not see the login or register buttons; instead, they will see a logout button.
+    Admin users have additional access to create new posts.
+- **Create New Post:** Admin users can click on the "New Post" link to create a new blog post and upload an image.
+
+your-repo-name/
+│
+├── .env                 # Environment variables
+├── public/              # Static files
+│   ├── css/
+│   └── js/
+├── routes/              # Express routes
+│   ├── blogRoutes.js
+│   ├── postRoutes.js
+│   └── userRoutes.js
+├── views/               # EJS templates
+│   ├── partials/
+│   ├── layouts/
+│   ├── index.ejs
+│   ├── about.ejs
+│   ├── contact.ejs
+│   ├── new.ejs
+│   └── ...
+├── models/              # Mongoose models
+│   ├── Post.js
+│   ├── User.js
+│   └── Message.js
+├── app.js               # Main application file
+├── seed.js              # Seed data script
+└── ...
+
+---
 
 ## Contributing
+1. Fork the repository
+2. Create a new branch
+```bash
+git checkout -b feature-name
 
-1. **Fork the repository**
-2. **Create a new branch**
-    ```bash
-    git checkout -b feature-name
-    ```
-3. **Make your changes**
-4. **Commit your changes**
-    ```bash
-    git commit -m "Description of changes"
-    ```
-5. **Push to your branch**
-    ```bash
-    git push origin feature-name
-    ```
-6. **Create a Pull Request**
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
