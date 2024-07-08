@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../uploadConfigs'); // Make sure this path is correct
 const Post = require('../models/post'); // Adjust the path as necessary
+const { ensureAuthenticated, ensureAdmin } = require('../config/auth');
 
 
-router.get('/new', (req, res) => {
+router.get('/new', ensureAuthenticated, ensureAdmin, (req, res) => {
   res.render('new');
 });
 

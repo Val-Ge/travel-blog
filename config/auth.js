@@ -5,14 +5,14 @@ module.exports={
         if(req.isAuthenticated()){
             return next();
         }
-        req.flash('error_msg', 'Please log in to view that sorce');
-        res.redirect('/users/login');
+        req.flash('error_msg', 'Please log in to view that source');
+        res.redirect('/login');
     },
     ensureAdmin:function(req,res,next){
         if(req.isAuthenticated() && req.user.role === 'admin'){
             return next();
         }
         req.flash('error_msg', 'you are not authorized to view that source');
-        res.redirect('/new');
+        res.redirect('/');
     }
 };

@@ -9,6 +9,7 @@ const passport = require('passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 
+
 // Load route files
 const postRoutes = require('./routes/postRoutes');
 const blogRoutes = require('./routes/blogRoutes');

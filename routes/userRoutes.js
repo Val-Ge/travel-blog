@@ -52,7 +52,7 @@ router.post('/register', (req, res) => {
                     name,
                     email,
                     password,
-                    role: role || 'user'
+                    role: 'user' //default role set to user
                 });
 
                 bcrypt.genSalt(10, (err, salt) => {
@@ -74,19 +74,39 @@ router.post('/register', (req, res) => {
 });
 
 // Login POST handler
-router.post('/login', (req, res, next) => {
-    passport.authenticate('local', {
-        successRedirect: '/new',
-        failureRedirect: '/login',// '/users/login'
-        failureFlash: true
-    })(req, res, next);
-});
+// router.post('/login', (req, res, next) => {
+//     passport.authenticate('local', {
+//         successRedirect: '/new',
+//         failureRedirect: '/login',// '/users/login'
+//         failureFlash: true
+//     })(req, res, next);
+// });
 
+router.post('/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) return next(err);
+      if (!user) return res.redirect('/login');
+  
+      req.logIn(user, (err) => {
+        if (err) return next(err);
+        if (user.role === 'admin') {
+          return res.redirect('/new');
+        } else {
+          return res.redirect('/');// /dahboard
+        }
+      });
+    })(req, res, next);
+  });
+ 
+  
 // Logout handler
-router.get('/logout', (req, res) => {
-    req.logout();
+router.get('/logout', (req, res, next) => {
+    req.logout(function(err) {
+        if (err) {return next(err); }
+    
     req.flash('success_msg', 'You are logged out.');
     res.redirect('/login'); // '/users/login'
+});
 });
 
 module.exports = router;
