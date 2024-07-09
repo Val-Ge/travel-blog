@@ -38,11 +38,35 @@ router.get('/posts/:postId', async (req, res) => {
     res.render('post', { post, admin });
   });
   
-  // // Delete route
-  // router.delete('/posts/:postId', async (req, res) => {
-  //   await Post.findByIdAndDelete(req.params.postId);
-  //   res.redirect('/');
-  // });
+ // view full post route with comments
+ router.get('/posts/:id', async (req, res) => {
+try {
+  const post = await Post.findById(req.params.postId).populate('comments.user');
+  const admin = req.isAuthenticated() && req.user.role === 'admin';
+  res.render('post', {post, admin});
+} catch (err) {
+  console.error(err);
+  res.status(404).send('Post not found');
+
+}
+});
+
+// Handle comment submission
+router.post('/posts/:postId/comments', ensureAuthenticated, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId);
+    const newComment = {
+      user: req.user._id,
+      content: req.body.content
+    };
+    post.comments.push(newComment);
+    await post.save();
+    res.redirect(`/posts/${post._id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
   // Edit post form route
 router.get('/posts/:postId/edit', ensureAuthenticated, ensureAdmin, async (req, res) => {
@@ -56,19 +80,6 @@ router.get('/posts/:postId/edit', ensureAuthenticated, ensureAdmin, async (req, 
     res.status(404).send('Post not found');
   }
 });
-
-// Handle edit post form submission
-// router.put('/posts/:postId', ensureAuthenticated, ensureAdmin, async (req, res) => {
-//   try {
-//     const postId = new ObjectId(req.params.postId); // Convert to ObjectId
-//     const { title, content, location } = req.body.post;
-//     await Post.findByIdAndUpdate(postId, { title, content, location });
-//     res.redirect(`/posts/${req.params.postId}`);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Internal Server Error');
-//   }
-// });
 
 // Handle edit post form submission
 router.put('/posts/:postId', ensureAuthenticated, ensureAdmin, upload.single('image'), async (req, res) => {
