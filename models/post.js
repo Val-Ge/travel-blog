@@ -1,30 +1,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const multer = require('multer');
+// const Comment = require('./comment'); // Import the Comment model
 
-const commentSchema = new Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now
-  }
-});
-  
-  // Models
-  const postSchema = new Schema({
+const postSchema = new Schema({
     title: String,
     content: String,
     image: String,
     location: String,
-    comments: [commentSchema]
-  });
+    comments: [{ type: Schema.Types.ObjectId, ref: 'Comment', default: [] }] // Use ObjectId type referencing Comment model
+});
 
-  module.exports = mongoose.model("Post", postSchema)
+module.exports = mongoose.model("Post", postSchema);
+
+  

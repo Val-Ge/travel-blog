@@ -26,38 +26,32 @@
         
       </div>
     </div>
-  </div>
-  <!-- Comment section -->
-  <div class="comments mt-4">
+<div class="container mt-4">
     <h5>Comments</h5>
     <ul class="list-group">
-      <% post.comments.forEach(comment => { %>
-        <li class="list-group-item">
-          <strong><%= comment.user.name %>:</strong> <%= comment.content %>
-          <span class="text-muted float-right"><%= new Date(comment.timestamp).toLocaleString() %></span>
-        </li>
-      <% }) %>
+      <% if (post.comments && post.comments.length > 0) { %>
+        <% post.comments.forEach(comment => { %>
+          <li class="list-group-item">
+            <%= comment.content %> -- <%= comment.user.name %>
+            <span class="text-muted float-right"><%= new Date(comment.timestamp).toLocaleDateString() %></span>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li class="list-group-item">No comments yet.</li>
+      <% } %>
     </ul>
-    
-    <% if (user) { %>
-      <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-3">
-        <div class="form-group">
-          <label for="content">Add a comment:</label>
-          <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-    <% } else { %>
-      <p class="mt-3">Please <a href="/login">log in</a> to add a comment.</p>
-    <% } %>
+
+    <h5>Add a Comment</h5>
+    <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-4">
+      <div class="form-group">
+        <textarea name="content" class="form-control" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
   </div>
-</div>
+
   <%- include('./partials/footer') %>
 </body>
-
-
-
-
-
 
 

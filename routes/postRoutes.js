@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../uploadConfigs'); // Make sure this path is correct
+const upload = require('../uploadConfigs'); // Ensure this path is correct
 const Post = require('../models/post'); // Adjust the path as necessary
+const Comment = require('../models/comment'); // Ensure this path is correct
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { ensureAuthenticated, ensureAdmin } = require('../config/auth');
 
-
 router.use(require('method-override')('_method'));
 
-//new post form route
+// New post form route
 router.get('/new', ensureAuthenticated, ensureAdmin, (req, res) => {
   res.render('new');
 });
@@ -21,6 +21,7 @@ router.post('/new', ensureAuthenticated, ensureAdmin, upload.single('image'), as
       content: req.body.post.content,
       image: req.file.filename,
       location: req.body.post.location,
+      comments:[]
     });
     await post.save();
     res.redirect('/');
@@ -30,37 +31,51 @@ router.post('/new', ensureAuthenticated, ensureAdmin, upload.single('image'), as
   }
 });
 
-// View full post route
+// View full post route with comments
 router.get('/posts/:postId', async (req, res) => {
-    const post = await Post.findById(req.params.postId);
-     // Check if user is admin
-     const admin = req.isAuthenticated() && req.user.role === 'admin';
-    res.render('post', { post, admin });
-  });
-  
- // view full post route with comments
- router.get('/posts/:id', async (req, res) => {
-try {
-  const post = await Post.findById(req.params.postId).populate('comments.user');
-  const admin = req.isAuthenticated() && req.user.role === 'admin';
-  res.render('post', {post, admin});
-} catch (err) {
-  console.error(err);
-  res.status(404).send('Post not found');
+  try {
+    const post = await Post.findById(req.params.postId).populate({
+      path: 'comments',
+      populate: {
+        path: 'user',
+        model: 'User'
+      }
+    });
 
-}
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+    console.log("Post:", post); // Debugging
+    console.log("Comments:", post.comments); // Debugging
+
+    const admin = req.isAuthenticated() && req.user.role === 'admin';
+    res.render('post', { post, admin });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
 });
 
 // Handle comment submission
 router.post('/posts/:postId/comments', ensureAuthenticated, async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
-    const newComment = {
+
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+    console.log("Request User:", req.user); // Debugging
+    console.log("Request Body:", req.body); // Debugging
+
+    const newComment = new Comment({
       user: req.user._id,
       content: req.body.content
-    };
+    });
+
+    await newComment.save();
     post.comments.push(newComment);
     await post.save();
+
     res.redirect(`/posts/${post._id}`);
   } catch (err) {
     console.error(err);
@@ -68,16 +83,19 @@ router.post('/posts/:postId/comments', ensureAuthenticated, async (req, res) => 
   }
 });
 
-  // Edit post form route
+// Edit post form route
 router.get('/posts/:postId/edit', ensureAuthenticated, ensureAdmin, async (req, res) => {
   try {
-    const postId = new ObjectId(req.params.postId); //added
     const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
     const admin = req.isAuthenticated() && req.user.role === 'admin';
     res.render('edit', { post, admin });
   } catch (err) {
     console.error(err);
-    res.status(404).send('Post not found');
+    res.status(500).send('Internal Server Error');
   }
 });
 
@@ -110,4 +128,5 @@ router.delete('/posts/:postId', ensureAuthenticated, ensureAdmin, async (req, re
     res.status(500).send('Internal Server Error');
   }
 });
+
 module.exports = router;
