@@ -129,4 +129,34 @@ router.delete('/posts/:postId', ensureAuthenticated, ensureAdmin, async (req, re
   }
 });
 
+// Route to delete a comment
+router.delete('/posts/:postId/comments/:commentId', ensureAuthenticated, ensureAdmin, async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    // Find the post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).send('Post not found');
+    }
+
+    // Find the comment
+    const commentIndex = post.comments.findIndex(comment => comment.equals(commentId));
+    if (commentIndex === -1) {
+      return res.status(404).send('Comment not found');
+    }
+
+    // Remove the comment from the post's comments array
+    post.comments.splice(commentIndex, 1);
+    await post.save();
+
+    // Delete the comment from the comments collection
+    await Comment.findByIdAndDelete(commentId);
+
+    res.redirect(`/posts/${postId}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+});
 module.exports = router;

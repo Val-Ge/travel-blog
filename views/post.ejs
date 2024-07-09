@@ -34,6 +34,12 @@
           <li class="list-group-item">
             <%= comment.content %> -- <%= comment.user.name %>
             <span class="text-muted float-right"><%= new Date(comment.timestamp).toLocaleDateString() %></span>
+            <% if (admin) { %>
+              <!-- Delete Comment Button -->
+              <form action="/posts/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+              </form>
+            <% } %>
           </li>
         <% }) %>
       <% } else { %>
