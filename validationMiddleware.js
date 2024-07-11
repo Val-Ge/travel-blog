@@ -1,26 +1,20 @@
-const { registerSchema } = require('./schemas');
+const Joi = require('joi');
 
-
-// Validation middleware
-function validateBody(schema) {
+function validateBody(...schemas) {
     return (req, res, next) => {
-        const { error } = schema.validate(req.body, { abortEarly: false });
-        if (error) {
-            console.log('Validation Error:', error);
-            const errors = error.details.map(detail => detail.message);
-            return res.render('register', { errors, ...req.body });
+        let errors = [];
+        schemas.forEach(schema => {
+            const { error } = schema.validate(req.body, { abortEarly: false });
+            if (error) {
+                errors = errors.concat(error.details.map(detail => detail.message));
+            }
+        });
+        if (errors.length > 0) {
+            req.flash('error_msg', errors);
+            return res.redirect('back');
         }
         next();
     };
-} 
-
-// function validateUser(req, res, next) {
-//     const { error } = userSchema.validate(req.body);
-//     if (error) {
-//         return res.status(400).json({ error: error.details[0].message });
-//     }
-//     next();
-// }
-
+}
 
 module.exports = { validateBody };

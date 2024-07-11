@@ -9,4 +9,25 @@ const registerSchema = Joi.object({
     
 });
 
-module.exports = { registerSchema }; 
+const loginSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required()
+}); 
+
+const commentSchema = Joi.object({
+    content: Joi.string().min(1).max(500).required(),
+    parentComment: Joi.string().optional().allow(null), // Allow parentComment to be optional or null
+    postId: Joi.string().required(),
+    userId: Joi.string().required()
+});
+
+const postSchema = Joi.object({
+    title: Joi.string().min(3).max(100).required(),
+    content: Joi.string().min(3).required(),
+    location: Joi.string().min(3).max(100).required(),
+    // Placeholder for image, we'll handle the file validation manually
+    image: Joi.any()
+});
+
+
+module.exports = { registerSchema, loginSchema, commentSchema, postSchema }; 

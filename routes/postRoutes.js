@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { validateUser } = require('../validationMiddleware');
+const { validateBody } = require('../validationMiddleware');
 const upload = require('../uploadConfigs'); // Ensure this path is correct
 const Post = require('../models/post');
 const Comment = require('../models/comment');
 const User = require('../models/User'); // Make sure this path is correct
+const { registerSchema, loginSchema, commentSchema, postSchema } = require('../schemas');
 
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
@@ -17,7 +18,7 @@ router.get('/new', ensureAuthenticated, ensureAdmin, (req, res) => {
   res.render('new');
 });
 
-router.post('/new', ensureAuthenticated, ensureAdmin, upload.single('image'), async (req, res) => {
+router.post('/new', ensureAuthenticated, ensureAdmin, upload.single('image'),validateBody(postSchema), async (req, res) => {
   try {
     const post = new Post({
       title: req.body.post.title,
@@ -120,7 +121,7 @@ router.get('/posts/:postId/edit', ensureAuthenticated, ensureAdmin, async (req, 
 });
 
 // Handle edit post form submission
-router.put('/posts/:postId', ensureAuthenticated, ensureAdmin, upload.single('image'), async (req, res) => {
+router.put('/posts/:postId', ensureAuthenticated, ensureAdmin, upload.single('image'), validateBody(postSchema), async (req, res) => {
   try {
     const { title, content, location } = req.body.post;
     const updateData = { title, content, location };
