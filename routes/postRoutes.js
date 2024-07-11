@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { validateUser } = require('../validationMiddleware');
 const upload = require('../uploadConfigs'); // Ensure this path is correct
 const Post = require('../models/post');
 const Comment = require('../models/comment');
