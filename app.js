@@ -11,6 +11,12 @@ const flash = require('connect-flash');
 const nodemailer = require('nodemailer')
 const methodOverride = require('method-override');
 
+// Import models
+const User = require('./models/User'); // Adjust path as necessary
+const Comment = require('./models/comment'); // Adjust path as necessary
+const Post = require('./models/post'); // Adjust path as necessary
+
+
 // Load route files
 const postRoutes = require('./routes/postRoutes');
 const blogRoutes = require('./routes/blogRoutes');

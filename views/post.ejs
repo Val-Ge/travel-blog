@@ -26,7 +26,9 @@
         
       </div>
     </div>
-<div class="container mt-4">
+  </div>
+
+  <div class="container mt-4">
     <h5>Comments</h5>
     <ul class="list-group">
       <% if (post.comments && post.comments.length > 0) { %>
@@ -34,30 +36,56 @@
           <li class="list-group-item">
             <%= comment.content %> -- <%= comment.user.name %>
             <span class="text-muted float-right"><%= new Date(comment.timestamp).toLocaleDateString() %></span>
+            
             <% if (admin) { %>
-              <!-- Delete Comment Button -->
               <form action="/posts/<%= post._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" style="display: inline;">
                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
               </form>
             <% } %>
+
+            <!-- Form to reply to a comment -->
+            <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-2">
+              <div class="form-group">
+                <textarea name="content" class="form-control" rows="2" placeholder="Reply to this comment" required></textarea>
+                <input type="hidden" name="parentComment" value="<%= comment._id %>">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">Reply</button>
+            </form>
+
+            <!-- Display child comments -->
+            <% if (comment.childComments && comment.childComments.length > 0) { %>
+              <ul class="list-group mt-3">
+                <% comment.childComments.forEach(childComment => { %>
+                  <li class="list-group-item">
+                    <%= childComment.content %> -- <%= childComment.user.name %>
+                    <span class="text-muted float-right"><%= new Date(childComment.timestamp).toLocaleDateString() %></span>
+
+                    <% if (admin) { %>
+                      <form action="/posts/<%= post._id %>/comments/<%= childComment._id %>?_method=DELETE" method="POST" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
+                    <% } %>
+                  </li>
+                <% }) %>
+              </ul>
+            <% } %>
+            
           </li>
         <% }) %>
       <% } else { %>
         <li class="list-group-item">No comments yet.</li>
       <% } %>
     </ul>
-
-    <h5>Add a Comment</h5>
+    
     <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-4">
       <div class="form-group">
-        <textarea name="content" class="form-control" rows="3" required></textarea>
+        <label for="content">Add a comment</label>
+        <textarea name="content" id="content" class="form-control" rows="3" required></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-
   </div>
 
   <%- include('./partials/footer') %>
 </body>
-
 

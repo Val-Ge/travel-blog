@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../uploadConfigs'); // Ensure this path is correct
-const Post = require('../models/post'); // Adjust the path as necessary
-const Comment = require('../models/comment'); // Ensure this path is correct
+const Post = require('../models/post');
+const Comment = require('../models/comment');
+const User = require('../models/User'); // Make sure this path is correct
+
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { ensureAuthenticated, ensureAdmin } = require('../config/auth');
@@ -21,7 +23,7 @@ router.post('/new', ensureAuthenticated, ensureAdmin, upload.single('image'), as
       content: req.body.post.content,
       image: req.file.filename,
       location: req.body.post.location,
-      comments:[]
+      comments: []
     });
     await post.save();
     res.redirect('/');
@@ -39,6 +41,12 @@ router.get('/posts/:postId', async (req, res) => {
       populate: {
         path: 'user',
         model: 'User'
+      }
+    }).populate({
+      path: 'comments',
+      populate: {
+        path: 'childComments',
+        populate: { path: 'user', model: 'User' }
       }
     });
 
@@ -64,17 +72,28 @@ router.post('/posts/:postId/comments', ensureAuthenticated, async (req, res) => 
     if (!post) {
       return res.status(404).send('Post not found');
     }
+    
     console.log("Request User:", req.user); // Debugging
     console.log("Request Body:", req.body); // Debugging
+    console.log("User ID:", req.user._id); // Debugging
+    console.log("Comment Content:", req.body.content); // Debugging
 
     const newComment = new Comment({
       user: req.user._id,
-      content: req.body.content
+      content: req.body.content,
+      parentComment: req.body.parentComment || null
     });
-
+    console.log("New comment:", newComment); // Debugging
     await newComment.save();
-    post.comments.push(newComment);
-    await post.save();
+
+    if (newComment.parentComment) {
+      const parentComment = await Comment.findById(newComment.parentComment);
+      parentComment.childComments.push(newComment._id);
+      await parentComment.save();
+    } else {
+      post.comments.push(newComment._id);
+      await post.save();
+    }
 
     res.redirect(`/posts/${post._id}`);
   } catch (err) {
@@ -141,13 +160,20 @@ router.delete('/posts/:postId/comments/:commentId', ensureAuthenticated, ensureA
     }
 
     // Find the comment
-    const commentIndex = post.comments.findIndex(comment => comment.equals(commentId));
-    if (commentIndex === -1) {
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
       return res.status(404).send('Comment not found');
     }
 
+    // If the comment has a parent, remove it from the parent's child comments array
+    if (comment.parentComment) {
+      const parentComment = await Comment.findById(comment.parentComment);
+      parentComment.childComments.pull(commentId);
+      await parentComment.save();
+    }
+
     // Remove the comment from the post's comments array
-    post.comments.splice(commentIndex, 1);
+    post.comments.pull(commentId);
     await post.save();
 
     // Delete the comment from the comments collection
@@ -159,4 +185,5 @@ router.delete('/posts/:postId/comments/:commentId', ensureAuthenticated, ensureA
     res.status(500).send('Internal Server Error');
   }
 });
+
 module.exports = router;
