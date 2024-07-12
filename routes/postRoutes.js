@@ -48,9 +48,12 @@ router.get('/posts/:postId', async (req, res) => {
       path: 'comments',
       populate: {
         path: 'childComments',
-        populate: { path: 'user', model: 'User' }
+        populate: { 
+          path: 'user' //,
+          // model: 'User' 
+        }
       }
-    });
+    }).populate('comments.user')
 
     if (!post) {
       return res.status(404).send('Post not found');
@@ -67,7 +70,7 @@ router.get('/posts/:postId', async (req, res) => {
 });
 
 // Handle comment submission
-router.post('/posts/:postId/comments', ensureAuthenticated, async (req, res) => {
+router.post('/posts/:postId/comments', ensureAuthenticated, validateBody(commentSchema), async (req, res) => {
   try {
     const post = await Post.findById(req.params.postId);
 

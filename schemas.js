@@ -17,8 +17,6 @@ const loginSchema = Joi.object({
 const commentSchema = Joi.object({
     content: Joi.string().min(1).max(500).required(),
     parentComment: Joi.string().optional().allow(null), // Allow parentComment to be optional or null
-    postId: Joi.string().required(),
-    userId: Joi.string().required()
 });
 
 const postSchema = Joi.object({
