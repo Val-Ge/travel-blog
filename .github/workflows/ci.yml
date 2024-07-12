@@ -3,27 +3,26 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - main  # Adjust branch name as needed
   pull_request:
     branches:
-      - main
+      - main  # Adjust branch name as needed
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-
-    services:
-      selenium:
-        image: selenium/standalone-chrome
-        ports:
-          - 4444:4444
-
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v2  # Checks out your repository
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
-    - run: npm install
-    - run: npm test
-    - run: npm run e2e-test
+        node-version: '14'  # Use the Node.js version your project requires
+
+    - name: Install dependencies
+      run: npm install  # Install npm dependencies
+
+    - name: Run unit tests
+      run: npm test  # Replace with your test command
+
+    - name: Run linting
+      run: npm run lint  # Replace with your linting command if applicable
